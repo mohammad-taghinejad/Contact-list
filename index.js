@@ -13,7 +13,7 @@ const newContact = {
     lastName,
 }
 contactList.push(newContact);
-const formattedContactList = contactList.map(({ id, firstName, lastName }) => `#${id} ${firstName} ${lastName}`);
+const formattedContactList = contactList.map(({ id, firstName, lastName }) => `#${id} ${firstName} ${lastName}`).join(' \n ');
 
 console.log("Contact List: ");
 console.log(formattedContactList);
