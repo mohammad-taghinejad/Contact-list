@@ -1,4 +1,4 @@
-**## Simple Contact List with Node.js**
+**Simple Contact List with Node.js**
 
 This project provides a basic contact list application using Node.js, allowing you to manage your contacts through CRUD operations (Create, Read, Update, Delete).
 
@@ -26,7 +26,15 @@ This project provides a basic contact list application using Node.js, allowing y
 
    ```bash
    npm install
-   ``` (or `yarn install` if you prefer yarn)
+   ```
+
+**Or**
+
+3. if you prefer yarn
+
+    ```bash
+    yarn install
+    ```
 
 **Running the Application:**
 
