@@ -8,7 +8,6 @@ const contactList = [];
 
 console.log("---- ContactList ----");
 
-
 async function addNewContact() {
     const firstName = await rl.question("First Name: ");
     const lastName = await rl.question("Last Name: ");
@@ -31,6 +30,21 @@ function quit() {
     rl.close();
 }
 
-await addNewContact();
-showContactList();
-quit();
+
+async function help() {
+    console.log('\nn: Add new contact\nl: Show contact list\nq: Quit\n');
+    const action = await rl.question("Enter your input: ");
+
+    if (action === 'n') {
+        await addNewContact();
+    } else if (action === 'l') {
+        showContactList();
+    } else {
+        quit();
+        return;
+    }
+
+    help();
+}
+
+await help();
