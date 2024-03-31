@@ -49,23 +49,58 @@ function showContactList() {
     console.log(formattedContactList);
 }
 
+async function deleteContact() {
+    if (contactList.length < 1) {
+        console.error("There is no contact on the list");
+        return;
+    }
+    try {
+        console.log("Are you sure you want delete a contact?");
+        const deleteContact = await rl.question("( y / n ): ");
+        if (deleteContact === "y") {
+            await showContactList();
+            const contactID = await rl.question("Write the ID of the contact that you want to delete: ");
+            const contactIndex = contactList.findIndex(({ id }) => id === Number(contactID));
+
+            if (contactIndex < 0) {
+                console.error("Invalid index - you should write a valid contact ID to delete from the contact list.");
+                return;
+            }
+
+            contactList.splice(contactIndex, 1);
+            await saveContacts();
+        } else {
+            await help();
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
 function quit() {
     rl.close();
 }
 
 
 async function help() {
-    console.log('\nn: Add new contact\nl: Show contact list\nq: Quit\n');
+    console.log('\nn: Add new contact\nl: Show contact list\nd: Delete a contact\nq: Quit\n');
+
+    console.log("----------");
+
     const action = await rl.question("Enter your input: ");
 
     if (action === 'n') {
         await addNewContact();
     } else if (action === 'l') {
         showContactList();
+    } else if (action === 'd') {
+        await deleteContact();
     } else {
         quit();
         return;
     }
+
+    console.log("----------");
 
     help();
 }
