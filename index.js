@@ -33,8 +33,11 @@ async function saveContacts() {
 async function addNewContact() {
     const firstName = await rl.question("First Name: ");
     const lastName = await rl.question("Last Name: ");
+    const lastContact = contactList[contactList.length - 1];
+    const id = lastContact.id + 1;
+
     const newContact = {
-        id: contactList.length,
+        id,
         firstName,
         lastName,
     }
