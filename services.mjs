@@ -9,12 +9,12 @@ export const CONTACT_LIST_FILE_PATH = "./data/contact-list.json";
   If an error occurs during file reading or parsing, it throws the error.
 */
 export async function loadContacts() {
-    try {
-        const contactListJSON = await fs.readFile(CONTACT_LIST_FILE_PATH, 'utf-8');
-        return JSON.parse(contactListJSON);
-    } catch (error) {
-        throw error;
-    }
+  try {
+    const contactListJSON = await fs.readFile(CONTACT_LIST_FILE_PATH, 'utf-8');
+    return JSON.parse(contactListJSON);
+  } catch (error) {
+    throw error;
+  }
 }
 
 /*
@@ -23,5 +23,5 @@ export async function loadContacts() {
   The formatted contact list is then printed to the console.
 */
 export function formatContactList(contactList) {
-    return contactList.map(({ id, firstName, lastName }) => `#${id} ${firstName} ${lastName}`).join(' \n ');
+  return contactList.map(({ id, firstName, lastName }) => `#${id} ${firstName} ${lastName}`).join(' \n ');
 }
