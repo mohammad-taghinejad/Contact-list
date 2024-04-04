@@ -20,33 +20,13 @@
 import readline from "readline/promises";
 import { stdin as input, stdout as output } from "process";
 import fs from "fs/promises";
-
-const CONTACT_LIST_FILE_PATH = "./data/contact-list.json";
+import { loadContacts, formatContactList, CONTACT_LIST_FILE_PATH } from "./services.mjs";
 
 const rl = readline.createInterface({ input, output });
 
 const contactList = [];
 
 console.log("---- ContactList ----");
-
-
-/*
-  This function loads the contact list from the JSON file located at CONTACT_LIST_FILE_PATH.
-  It reads the file asynchronously using fs.readFile and parses the JSON data.
-  If successful, it appends the loaded contacts to the contactList array.
-  If an error occurs during file reading or parsing, it throws the error.
-*/
-async function loadContacts() {
-    try {
-        const contactListJSON = await fs.readFile(CONTACT_LIST_FILE_PATH, 'utf-8');
-        contactList.push(
-            ...JSON.parse(contactListJSON)
-        );
-    } catch (error) {
-        throw error;
-    }
-}
-
 
 /*
   This function saves the current contact list to the JSON file located at CONTACT_LIST_FILE_PATH.
@@ -91,7 +71,7 @@ async function addNewContact() {
   The formatted contact list is then printed to the console.
 */
 function showContactList() {
-    const formattedContactList = contactList.map(({ id, firstName, lastName }) => `#${id} ${firstName} ${lastName}`).join(' \n ');
+    const formattedContactList = formatContactList(contactList);
 
     console.log("Contact List: ");
     console.log(formattedContactList);
@@ -175,7 +155,8 @@ async function help() {
   It first loads the existing contacts using loadContacts, then displays the help menu using help.
 */
 async function main() {
-    await loadContacts();
+    const loadedContacts = await loadContacts();
+    contactList.push(...loadedContacts);
     help();
 }
 
