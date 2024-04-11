@@ -23,5 +23,5 @@ export async function loadContacts() {
   The formatted contact list is then printed to the console.
 */
 export function formatContactList(contactList) {
-  return contactList.map(({ id, firstName, lastName }) => `#${id} ${firstName} ${lastName}`).join(' \n ');
+  return contactList.map(({ id, firstName, lastName }) => `#${id} ${firstName} ${lastName}`).join(' \n');
 }

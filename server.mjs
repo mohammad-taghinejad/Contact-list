@@ -1,31 +1,29 @@
-import http from "http";
-import url from "url";
+import express from "express";
 import { formatContactList, loadContacts } from "./services.mjs";
 
+const app = express();
+const port = 3000;
 const contactList = [];
 
+function loggerMiddleware(req, res, next) {
+    console.log("Request: ", req.method, req.url);
+    next();
+}
 
-const server = http.createServer((req, res) => {
-    const urlData = url.parse(req.url, true);
-    let responseData = null;
-    console.log(req.method, req.url);
+app.disable('etag');
+app.use(loggerMiddleware);
 
-    if (urlData.query.formatted == 'true') {
-        res.setHeader('Content-Type', 'text/html');
-        responseData = '<pre>'
-        responseData += formatContactList(contactList);
-        responseData += '</pre>'
-    } else {
-        res.setHeader('Content-Type', 'application/json');
-        responseData = JSON.stringify(contactList);
+app.get('/list', (req, res) => {
+    if (req.query.format) {
+        const responseData = `<pre>${formatContactList(contactList)}</pre>`;
+        
+        res.type('html');
+        res.send(responseData);
+        return;
     }
-
-    res.writeHead(200);
-
-    res.write(responseData);
-
-    res.end();
+    res.json(contactList);
 });
+
 
 
 async function main() {
@@ -33,7 +31,7 @@ async function main() {
 
     contactList.push(...loadedContacts);
 
-    server.listen(3000, () => {
+    app.listen(port, () => {
         console.log("HTTP server is listening on the port 3000");
     });
 }
