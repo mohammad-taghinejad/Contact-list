@@ -1,6 +1,6 @@
 import express from "express";
-import { formatContactList, loadContacts } from "./services.mjs";
-
+import { loadContacts } from "../services.mjs";
+import routes from './routes.js'
 const app = express();
 const port = 3000;
 const contactList = [];
@@ -12,17 +12,8 @@ function loggerMiddleware(req, res, next) {
 
 app.disable('etag');
 app.use(loggerMiddleware);
+app.use("/contacts", routes);
 
-app.get('/list', (req, res) => {
-    if (req.query.format) {
-        const responseData = `<pre>${formatContactList(contactList)}</pre>`;
-        
-        res.type('html');
-        res.send(responseData);
-        return;
-    }
-    res.json(contactList);
-});
 
 
 
