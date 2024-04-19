@@ -4,8 +4,8 @@
 
   Functions:
   - loadContacts(): Loads the contact list from the file.
-  - saveContacts(): Saves the current contact list to the file.
-  - addNewContact(): Prompts the user to input a new contact and adds it to the contact list.
+  - saveContacts(contactList): Saves the current contact list to the file.
+  - createNewContact(): Prompts the user to input a new contact and adds it to the contact list.
   - showContactList(): Displays the current contact list.
   - deleteContact(): Prompts the user to delete a contact from the list.
   - quit(): Closes the readline interface, terminating the program.
@@ -19,28 +19,13 @@
 
 import readline from "readline/promises";
 import { stdin as input, stdout as output } from "process";
-import fs from "fs/promises";
-import { loadContacts, formatContactList, CONTACT_LIST_FILE_PATH } from "./services.mjs";
+import { loadContacts, formatContactList, generateContactId, saveContacts } from "./services.mjs";
 
 const rl = readline.createInterface({ input, output });
 
 const contactList = [];
 
 console.log("---- ContactList ----");
-
-/*
-  This function saves the current contact list to the JSON file located at CONTACT_LIST_FILE_PATH.
-  It serializes the contactList array to JSON format and writes it to the file asynchronously using fs.writeFile.
-  If an error occurs during file writing, it throws the error.
-*/
-async function saveContacts() {
-    try {
-        const contactListJSON = JSON.stringify(contactList);
-        await fs.writeFile(CONTACT_LIST_FILE_PATH, contactListJSON);
-    } catch (error) {
-        throw error;
-    }
-}
 
 
 /*
@@ -49,11 +34,11 @@ async function saveContacts() {
   It then creates a new contact object and adds it to the contactList array.
   Finally, it saves the updated contact list to the file using the saveContacts function.
 */
-async function addNewContact() {
+async function createNewContact() {
     const firstName = await rl.question("First Name: ");
     const lastName = await rl.question("Last Name: ");
-    const lastContact = contactList[contactList.length - 1];
-    const id = lastContact.id + 1;
+
+    const id = generateContactId(contactList);
 
     const newContact = {
         id,
@@ -61,7 +46,7 @@ async function addNewContact() {
         lastName,
     }
     contactList.push(newContact);
-    await saveContacts();
+    await saveContacts(contactList);
 }
 
 
@@ -103,7 +88,7 @@ async function deleteContact() {
             }
 
             contactList.splice(contactIndex, 1);
-            await saveContacts();
+            await saveContacts(contactList);
         } else {
             await help();
         }
@@ -123,7 +108,7 @@ function quit() {
 
 /*
   This function displays a help menu with available actions and prompts the user to enter their choice.
-  Based on the user's input, it calls the appropriate function (addNewContact, showContactList, deleteContact, quit).
+  Based on the user's input, it calls the appropriate function (createNewContact, showContactList, deleteContact, quit).
   If an invalid input is provided, it displays the help menu again.
 */
 async function help() {
@@ -134,7 +119,7 @@ async function help() {
     const action = await rl.question("Enter your input: ");
 
     if (action === 'n') {
-        await addNewContact();
+        await createNewContact();
     } else if (action === 'l') {
         showContactList();
     } else if (action === 'd') {
