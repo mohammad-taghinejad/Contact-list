@@ -1,7 +1,8 @@
 import express from 'express';
-import { formatContactList } from "../services.mjs";
+import { formatContactList, loadContacts } from "../services.mjs";
 
 const router = express.Router();
+const contactList = [];
 
 router.get('/list', (req, res) => {
     if (req.query.format) {
@@ -13,5 +14,7 @@ router.get('/list', (req, res) => {
     res.json(contactList);
 });
 
+const loadedContacts = await loadContacts();
+contactList.push(...loadedContacts);
 
 export default router;
